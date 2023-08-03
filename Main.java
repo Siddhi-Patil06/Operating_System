@@ -44,18 +44,18 @@ public class OS {
         try {
             while((line = fread.readLine()) != null) {
                 buffer = line.toCharArray();
-                if(buffer[0] == '$' && buffer[1] == 'A' && buffer == 'M' && buffer == 'J') {
+                if(buffer[0] == '$' && buffer[1] == 'A' && buffer[2] == 'M' && buffer[3] == 'J') {
                     System.out.println("Program card detected.");
                     //init();
                     continue;
                 }
-                else if(buffer[0] == '$' && buffer[1] == 'D' && buffer == 'T' && buffer == 'A') {
+                else if(buffer[0] == '$' && buffer[1] == 'D' && buffer[2] == 'T' && buffer[3] == 'A') {
                     System.out.println("Data card detected.");
                     //execute();
                     flag = 2;
                     continue;
                 }
-                else if(buffer[0] == '$' && buffer[1] == 'E' && buffer == 'N' && buffer == 'D') {
+                else if(buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D') {
                     System.out.println("End card detected.");
                     output.write("\n\n\n");
                     //print_memory();
