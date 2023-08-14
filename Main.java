@@ -14,7 +14,7 @@ class OS {
     char []R = new char[4];
     char []IR = new char[4];
     int IC;
-    int C;
+    boolean C;
     int SI;
 
     int m;
@@ -37,8 +37,68 @@ class OS {
         }
     }
 
+    public void MOS() {
+
+    }
+
+    private void EXECUTEUSERPROGRAM() {
+        while(true) {
+            IR = M[IC];
+            IC++;
+            String str = String.copyValueOf(IR, 1, 2);
+            switch (str) {
+                case "LR":
+                    R = M[IR[2]-48+IR[3]-48];
+                    break;
+
+                case "SR":
+                    M[IR[2]-48+IR[3]-48] = R;
+                    break;
+
+                case "CR":
+                    int num = IR[2]-48+IR[3]-48;
+                    if(R[0] == M[num][0] && R[1] == M[num][1] && R[2] == M[num][2] && R[3] == M[num][3]) {
+                        C = true;
+                    }
+                    else {
+                        C = false;
+                    }
+                    break;
+
+                case "BT":
+                    if(C == true) {
+                        IC = IR[2]-48+IR[3]-48;
+                    }
+                    break;
+
+                case "GD":
+                    SI = 1;
+                    MOS();
+                    break;
+
+                case "PD":
+                    SI = 2;
+                    MOS();
+                    break;
+
+                case "H":
+                    SI = 3;
+                    MOS();
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void STARTEXECUTION() {
+        IC = 0;
+        EXECUTEUSERPROGRAM();
+    }
+
     public void LOAD() {
-        // int flag = 0;
+        int flag = 0;
         String line;
         m = 0;
         try {
@@ -46,13 +106,12 @@ class OS {
                 buffer = line.toCharArray();
                 if(buffer[0] == '$' && buffer[1] == 'A' && buffer[2] == 'M' && buffer[3] == 'J') {
                     System.out.println("Control card detected.");
-                    //init();
                     continue;
                 }
                 else if(buffer[0] == '$' && buffer[1] == 'D' && buffer[2] == 'T' && buffer[3] == 'A') {
                     System.out.println("Data card detected.");
-                    //execute();
-                    // flag = 2;
+                    //STARTEXECUTION();
+                    flag = 2;
                     continue;
                 }
                 else if(buffer[0] == '$' && buffer[1] == 'E' && buffer[2] == 'N' && buffer[3] == 'D') {
@@ -66,16 +125,18 @@ class OS {
                     System.out.println("Abort due to exceed memory usage");
                 }
                 System.out.println("Your program starts here");
-                for(int i = 0; i < line.length() ; i++) {
-                    if( i % 4 == 0 ) {
-                        m++;
-                        // if(i!=0)
-                        // System.out.println();
+                int idx=0;
+                for(int i = m; i < m+10 ; i++) {
+                    for(int j = 0; j < 4; j++) {
+                        if(idx < line.length()) {
+                            M[i][j] = buffer[idx];
+                            idx++;
+                        }else break;
                     }
-                    M[m-1][i % 4] = buffer[i];  
-                    // System.out.print(buffer[i]);
                 }
+                m = m + 10;
             }
+            // printing main memory
             System.out.println("The main memory is: ");
             for(int j = 0; j < 100; j++) {
                 System.out.print(j);                
